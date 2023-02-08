@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-import re
 
 # Convert string to date object 
 # <8:00 PM Friday October 21, 2022> to <2022-10-21 20:00:00>
