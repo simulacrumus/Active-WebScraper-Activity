@@ -3,9 +3,15 @@ from util import get_json_data
 import schedule
 import time
 import requests
+from os import environ as env
 
 def run():
     try:
+        URL = 'http://{HOST}:{PORT}/api/v1/activities/all?key={API_KEY}'.format(
+            HOST = env['SERVER_HOST'],
+            PORT = env['SERVER_PORT'],
+            API_KEY = env['API_KEY']
+        )
         facilities = get_json_data('facilities.json')
         activities = []
         for facility in facilities:
@@ -13,7 +19,7 @@ def run():
             for reservation in reservations:
                 activities_for_facility = build_activities_for_facility_reservation(reservation)
                 activities += activities_for_facility
-        response = requests.post(url="http://localhost:8080/api/v1/activities/all?key=YOUR_API_KEY", json=activities)
+        response = requests.post(url=URL, json=activities)
         if response.ok:
             print("\nActivities successfully transferred\n")
         else:
@@ -22,8 +28,11 @@ def run():
         print(e)
 
 if __name__ == '__main__':
-    schedule.every().hour.at(":05").do(run)
-    schedule.every().hour.at(":35").do(run)
+    print("Starting Python Web Scraper..")
+    schedule.every().hour.at(":01").do(run)
+    schedule.every().hour.at(":15").do(run)
+    schedule.every().hour.at(":30").do(run)
+    schedule.every().hour.at(":45").do(run)
     while 1:
         schedule.run_pending()
         time.sleep(1)
