@@ -1,5 +1,6 @@
 from scraper import *
 import datetime
+import logging
 
 BASE_URL='https://reservation.frontdesksuite.ca/'
 SUBMISSION_URL_SUFFIX = "/ReserveTime/SubmitSlotCount?culture=en"
@@ -9,7 +10,7 @@ def build_activities_for_facility_reservation(facility_reservation):
     activities = []
     reservation_page_url = BASE_URL + SUBMISSION_URL_PREFIX + facility_reservation
     activity_titles = scrape_activity_titles(reservation_page_url)
-    print(activity_titles)
+    logging.info(activity_titles)
     for activity_title in activity_titles:
         title = activity_title
         submission_link = "/"+SUBMISSION_URL_PREFIX+facility_reservation+SUBMISSION_URL_SUFFIX
@@ -25,5 +26,5 @@ def build_activities_for_facility_reservation(facility_reservation):
                 }
                 activities.append(activity)
         except(Exception) as e:
-            print(e)
+            logging.warning(e)
     return activities;
